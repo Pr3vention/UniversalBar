@@ -108,7 +108,10 @@ eventFrame:RegisterEvent("ADDON_LOADED")
 eventFrame:SetScript("OnEvent", function(self, event, ...)
 	if event == 'ADDON_LOADED' and addonName == select(1,...) then
 		if not UniversalBarSettings then
-			UniversalBarSettings = {}
+			UniversalBarSettings = {
+				AutoLoadAtLogin = true,
+				ClearUnsavedActionSlots = true
+			}
 		end
 		
 		if UniversalBarSettings.AutoLoadAtLogin then
