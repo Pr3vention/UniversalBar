@@ -109,7 +109,7 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
 			UniversalBarSettings = {}
 		end
 		
-		if UniversalBarSettings.AutoSetAtLogin then
+		if UniversalBarSettings.AutoLoadAtLogin then
 			UniversalBar:LoadBarConfig()
 		end
 		

@@ -19,7 +19,7 @@ frame:SetScript("OnShow", function(frame)
 	title:SetText(addonName)
 	
 	local autoLoadAtLoginCheckbox = newCheckbox('AutoLoadAtLogin', 'Automatically load at login', 'Loads your shared action bar configuration at login')
-	autoLoadAtLoginCheckbox:SetChecked(UniversalBarSettings.AutoSetAtLogin)
+	autoLoadAtLoginCheckbox:SetChecked(UniversalBarSettings.AutoLoadAtLogin)
 	autoLoadAtLoginCheckbox:SetPoint("TOPLEFT", title, "BOTTOMLEFT", -3, -16)
 	
 	local saveBarConfigButton = CreateFrame("Button", "UniversalBarSaveBarConfigButton", frame, "UIPanelButtonTemplate")
