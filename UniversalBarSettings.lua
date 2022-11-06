@@ -24,7 +24,7 @@ frame:SetScript("OnShow", function(frame)
 	
 	local clearUnsavedActionSlots = newCheckbox('ClearUnsavedActionSlots', 'Clear slots that are not saved in universal configuration')
 	clearUnsavedActionSlots:SetChecked(UniversalBarSettings.ClearUnsavedActionSlots)
-	clearUnsavedActionSlots:SetPoint("TOPLEFT", autoLoadAtLoginCheckbox, "BOTTOMLEFT", -3, -16)
+	clearUnsavedActionSlots:SetPoint("TOPLEFT", autoLoadAtLoginCheckbox, "BOTTOMLEFT", 0, 0)
 	
 	local saveBarConfigButton = CreateFrame("Button", "UniversalBarSaveBarConfigButton", frame, "UIPanelButtonTemplate")
 	saveBarConfigButton:SetText('Save action bars')
