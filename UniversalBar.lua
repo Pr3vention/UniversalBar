@@ -14,7 +14,7 @@ local ActionBarSlotRanges = {
 }
 
 function UniversalBar:SetBarID(barID, state)
-	assert(barID >= 1 and barID <= 8, 'Invalid bar selected. You can only select bars 1 through 8')
+	assert(barID >= 1 and barID <= 8, 'Invalid bar being set. You can only set bars 1 through 8')
 	UniversalBarSettings.Bars[barID] = state
 end
 function UniversalBar:SaveBarConfig()
