@@ -1,19 +1,29 @@
 local addonName = select(1, ...)
 UniversalBar = select(2, ...)
 
+-- blizzard's slotIDs are all over the place... no clue why
+local ActionBarSlotRanges = {
+	[1] = { 1, 12 },
+	[2] = { 61, 72 },
+	[3] = { 49, 60 },
+	[4] = { 25, 36 },
+	[5] = { 37, 48 },
+	[6] = { 145, 156 },
+	[7] = { 157, 168 },
+	[8] = { 169, 180 }
+}
+
 function UniversalBar:SetBarID(barID)
 	assert(barID >= 1 and barID <= 8, 'Invalid bar selected. You can only select bars 1 through 8')
 	UniversalBarSettings.BarID = barID
 end
-
 function UniversalBar:SaveBarConfig()
 	if not UniversalBarSettings.BarConfig then
 		UniversalBarSettings.BarConfig = {}
 	end
 	
 	local slot = 1
-	local startIndex = UniversalBarSettings.BarID * 12 + 1
-	local endIndex = startIndex + 11
+	local startIndex, endIndex = unpack(ActionBarSlotRanges[bar])
 	for i = startIndex, endIndex do
 		local actionType, id, subType = GetActionInfo(i)
 		if actionType == 'summonmount' then
@@ -43,6 +53,7 @@ function UniversalBar:LoadBarConfig()
 	assert(UniversalBarSettings.BarConfig, 'no bar config has been set')
 	
 	local needPlaceAction = true
+	local startIndex = unpack(ActionBarSlotRanges[UniversalBarSettings.BarID])
 	for k,v in pairs(UniversalBarSettings.BarConfig) do
 		needPlaceAction = false
 		if v.type == 'spell' then
@@ -60,14 +71,14 @@ function UniversalBar:LoadBarConfig()
 		elseif v.type == 'item' or v.type == 'toy' then
 			local item = Item:CreateFromItemID(v.id)
 			if not item:IsItemEmpty() then
-				local itemSlot = k
+				local itemSlot = (startIndex+k-1)
 				item:ContinueOnItemLoad(function()
 					if v.type == 'toy' then
 						C_ToyBox.PickupToyBoxItem(v.id)
 					else
 						PickupItem(v.id)
 					end
-					PlaceAction(UniversalBarSettings.BarID*12+itemSlot)
+					PlaceAction(itemSlot)
 					ClearCursor()
 				end)
 			end
@@ -76,7 +87,7 @@ function UniversalBar:LoadBarConfig()
 			needPlaceAction = true
 		end
 		if needPlaceAction then
-			PlaceAction(UniversalBarSettings.BarID*12+k)
+			PlaceAction((startIndex+k-1))
 			ClearCursor()
 		end
 	end
