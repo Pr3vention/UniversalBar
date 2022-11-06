@@ -107,25 +107,39 @@ function UniversalBar:LoadBarConfig()
 	end
 end
 
+local keys = 0
 local eventFrame = CreateFrame("FRAME", "UniversalBarEventFrame", UIParent)
-eventFrame.events = {}
-eventFrame:RegisterEvent("ADDON_LOADED")
+local loginEvents = {
+	ADDON_LOADED = true,
+	PLAYER_ENTERING_WORLD = true,
+	SPELLS_CHANGED = true,
+	PET_JOURNAL_LIST_UPDATE = true,
+}
+for event in pairs(loginEvents) do
+	eventFrame:RegisterEvent(event)
+	keys = keys + 1
+end
 eventFrame:SetScript("OnEvent", function(self, event, ...)
-	if event == 'ADDON_LOADED' and addonName == select(1,...) then
-		if not UniversalBarSettings then
-			UniversalBarSettings = {
-				AutoLoadAtLogin = true,
-				ClearUnsavedActionSlots = true,
-				Bars = {},
-				BarConfig = {},
-			}
+	if loginEvents[event] then
+		if event == 'ADDON_LOADED' and addonName == select(1,...) then
+			if not UniversalBarSettings then
+				UniversalBarSettings = {
+					AutoLoadAtLogin = true,
+					ClearUnsavedActionSlots = true,
+					Bars = {},
+					BarConfig = {},
+				}
+			end
 		end
+		loginEvents[event] = nil
+		keys = keys - 1
+		eventFrame:UnregisterEvent(event)
 		
-		if UniversalBarSettings.AutoLoadAtLogin then
-			UniversalBar:LoadBarConfig()
+		if keys <= 0 then
+			if UniversalBarSettings.AutoLoadAtLogin then
+				UniversalBar:LoadBarConfig()
+			end
 		end
-		
-		eventFrame:UnregisterEvent('ADDON_LOADED')
 	end
 end)
 UniversalBar.frame = eventFrame
