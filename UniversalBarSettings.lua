@@ -7,7 +7,7 @@ frame:SetScript("OnShow", function(frame)
 	local function newCheckbox(name, label)
 		local check = CreateFrame("CheckButton", "UniversalBarCheck" .. name, frame, "InterfaceOptionsCheckButtonTemplate")
 		check:SetScript("OnClick", function(self)
-			UniversalBarSettings.AutoSetAtLogin = self:GetChecked()
+			UniversalBarSettings[name] = self:GetChecked()
 		end)
 		check.label = _G[check:GetName() .. "Text"]
 		check.label:SetText(label)
