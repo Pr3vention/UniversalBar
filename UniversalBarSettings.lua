@@ -78,8 +78,8 @@ frame:SetScript("OnShow", function(frame)
 	unibar8:SetPoint("TOPLEFT", unibar7, "BOTTOMLEFT", 0, 0)
 	
 	local saveBarConfigButton = CreateFrame("Button", "UniversalBarSaveBarConfigButton", frame, "UIPanelButtonTemplate")
-	saveBarConfigButton:SetText('Save action bars')
-	saveBarConfigButton:SetWidth(200)
+	saveBarConfigButton:SetText('Save bars')
+	saveBarConfigButton:SetWidth(140)
 	saveBarConfigButton:SetHeight(24)
 	saveBarConfigButton:SetPoint("TOPLEFT", unibar4, "BOTTOMLEFT", 3, -16)
 	saveBarConfigButton:SetScript("OnClick", function()
@@ -87,12 +87,25 @@ frame:SetScript("OnShow", function(frame)
 	end)
 	
 	local loadBarConfigButton = CreateFrame("Button", "UniversalBarLoadBarConfigButton", frame, "UIPanelButtonTemplate")
-	loadBarConfigButton:SetText('Load action bars')
-	loadBarConfigButton:SetWidth(200)
+	loadBarConfigButton:SetText('Load bars')
+	loadBarConfigButton:SetWidth(140)
 	loadBarConfigButton:SetHeight(24)
 	loadBarConfigButton:SetPoint("LEFT", saveBarConfigButton, "RIGHT", 16, 0)
 	loadBarConfigButton:SetScript("OnClick", function()
 		UniversalBar:LoadBarConfig()
+	end)
+	
+	local clearBarConfigButton = CreateFrame("Button", "UniversalBarLoadBarConfigButton", frame, "UIPanelButtonTemplate")
+	clearBarConfigButton:SetText('Clear bars')
+	clearBarConfigButton:SetWidth(140)
+	clearBarConfigButton:SetHeight(24)
+	clearBarConfigButton:SetPoint("LEFT", loadBarConfigButton, "RIGHT", 16, 0)
+	clearBarConfigButton:SetScript("OnClick", function()
+		UniversalBarSettings.BarConfig = {}
+		for i=1,8 do
+			_G['UniversalBarCheckunibar' .. i]:SetChecked(false)
+			UniversalBarSettings.Bars[i] = false
+		end
 	end)
 end)
 
