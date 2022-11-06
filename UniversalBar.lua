@@ -23,7 +23,7 @@ function UniversalBar:SaveBarConfig()
 	end
 	
 	local slot = 1
-	local startIndex, endIndex = unpack(ActionBarSlotRanges[bar])
+	local startIndex, endIndex = unpack(ActionBarSlotRanges[UniversalBarSettings.BarID])
 	for i = startIndex, endIndex do
 		local actionType, id, subType = GetActionInfo(i)
 		if actionType == 'summonmount' then
