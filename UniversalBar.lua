@@ -104,3 +104,4 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
 		eventFrame:UnregisterEvent('ADDON_LOADED')
 	end
 end)
+UniversalBar.frame = eventFrame

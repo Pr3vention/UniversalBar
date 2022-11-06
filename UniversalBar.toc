@@ -6,3 +6,4 @@
 ## SavedVariables: UniversalBarSettings
 
 UniversalBar.lua
+UniversalBarSettings.lua
