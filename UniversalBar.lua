@@ -101,6 +101,11 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
 		if not UniversalBarSettings then
 			UniversalBarSettings = {}
 		end
+		
+		if UniversalBarSettings.AutoSetAtLogin then
+			UniversalBar:LoadBarConfig()
+		end
+		
 		eventFrame:UnregisterEvent('ADDON_LOADED')
 	end
 end)
