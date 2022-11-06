@@ -94,8 +94,10 @@ function UniversalBar:LoadBarConfig()
 				ClearCursor()
 			end
 		else
-			PickupAction(startIndex+slot-1)
-			ClearCursor()
+			if UniversalBarSettings.ClearUnsavedActionSlots then
+				PickupAction(startIndex+slot-1)
+				ClearCursor()
+			end
 		end
 	end
 end
