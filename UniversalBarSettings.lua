@@ -1,5 +1,4 @@
-local addonName = select(1, ...)
-UniversalBar = select(2, ...)
+local addonName, UniversalBar = ...
 
 local frame = UniversalBar.frame
 frame.name = addonName

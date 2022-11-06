@@ -1,5 +1,4 @@
-local addonName = select(1, ...)
-UniversalBar = select(2, ...)
+local addonName, UniversalBar = ...
 
 -- blizzard's slotIDs are all over the place... no clue why
 local ActionBarSlotRanges = {
