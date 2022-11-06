@@ -13,90 +13,96 @@ local ActionBarSlotRanges = {
 	[8] = { 169, 180 }
 }
 
-function UniversalBar:SetBarID(barID)
+function UniversalBar:SetBarID(barID, state)
 	assert(barID >= 1 and barID <= 8, 'Invalid bar selected. You can only select bars 1 through 8')
-	UniversalBarSettings.BarID = barID
+	UniversalBarSettings.Bars[barID] = state
 end
 function UniversalBar:SaveBarConfig()
 	if not UniversalBarSettings.BarConfig then
 		UniversalBarSettings.BarConfig = {}
 	end
 	
-	local slot = 1
-	local startIndex, endIndex = unpack(ActionBarSlotRanges[UniversalBarSettings.BarID])
-	for i = startIndex, endIndex do
-		local actionType, id, subType = GetActionInfo(i)
-		if actionType == 'summonmount' then
-			local spellID = select(2, C_MountJournal.GetMountInfoByID(id))
-			actionType = 'mount'
-			id = spellID
-		elseif actionType == 'item' then
-			if C_ToyBox.GetToyInfo(id) then
-				actionType = 'toy'
-			else
-				actionType = 'item'
-			end
-		end
-		if actionType then
-			UniversalBarSettings.BarConfig[slot] = {
-				type = actionType,
-				id = id
-			}
-		else 
-			UniversalBarSettings.BarConfig[slot] = nil
-		end
-		slot = slot + 1
-	end 
-end
-function UniversalBar:LoadBarConfig()
-	assert(UniversalBarSettings.BarID, 'Universal bar has not been set yet.')
-	assert(UniversalBarSettings.BarConfig, 'no bar config has been set')
-	
-	local needPlaceAction = true
-	local startIndex, endIndex = unpack(ActionBarSlotRanges[UniversalBarSettings.BarID])
-	for slot = 1, endIndex-startIndex+1 do
-		if UniversalBarSettings.BarConfig[slot] then
-			local actionType = UniversalBarSettings.BarConfig[slot].type
-			local actionID = UniversalBarSettings.BarConfig[slot].id
-			needPlaceAction = false
-			if actionType == 'spell' then
-				PickupSpell(actionID)
-				needPlaceAction = true
-			elseif actionType == 'mount' then
-				for i=1, C_MountJournal.GetNumMounts() do
-					local spellID = select(2, C_MountJournal.GetDisplayedMountInfo(i))
-					if spellID == actionID then
-						C_MountJournal.Pickup(i)
-						needPlaceAction = true
-						break;
+	for barID, state in pairs(UniversalBarSettings.Bars or {}) do
+		if state then
+			UniversalBarSettings.BarConfig[barID] = {}
+			local slot = 1
+			local startIndex, endIndex = unpack(ActionBarSlotRanges[barID])
+			for i = startIndex, endIndex do
+				local actionType, id, subType = GetActionInfo(i)
+				if actionType == 'summonmount' then
+					local spellID = select(2, C_MountJournal.GetMountInfoByID(id))
+					actionType = 'mount'
+					id = spellID
+				elseif actionType == 'item' then
+					if C_ToyBox.GetToyInfo(id) then
+						actionType = 'toy'
+					else
+						actionType = 'item'
 					end
 				end
-			elseif actionType == 'item' or actionType == 'toy' then
-				local item = Item:CreateFromItemID(actionID)
-				if not item:IsItemEmpty() then
-					local itemSlot = (startIndex+slot-1)
-					item:ContinueOnItemLoad(function()
-						if actionType == 'toy' then
-							C_ToyBox.PickupToyBoxItem(actionID)
-						else
-							PickupItem(actionID)
-						end
-						PlaceAction(itemSlot)
-						ClearCursor()
-					end)
+				if actionType then
+					UniversalBarSettings.BarConfig[barID][slot] = {
+						type = actionType,
+						id = id
+					}
+				else 
+					UniversalBarSettings.BarConfig[barID][slot] = nil
 				end
-			elseif actionType == 'summonpet' then
-				C_PetJournal.PickupPet(actionID)
-				needPlaceAction = true
+				slot = slot + 1
 			end
-			if needPlaceAction then
-				PlaceAction(startIndex+slot-1)
-				ClearCursor()
-			end
-		else
-			if UniversalBarSettings.ClearUnsavedActionSlots then
-				PickupAction(startIndex+slot-1)
-				ClearCursor()
+		end
+	end
+end
+function UniversalBar:LoadBarConfig()
+	for barID, state in pairs(UniversalBarSettings.Bars or {}) do
+		if state then
+			local needPlaceAction = true
+			local startIndex, endIndex = unpack(ActionBarSlotRanges[barID])
+			for slot = 1, endIndex-startIndex+1 do
+				if UniversalBarSettings.BarConfig[barID][slot] then
+					local actionType = UniversalBarSettings.BarConfig[barID][slot].type
+					local actionID = UniversalBarSettings.BarConfig[barID][slot].id
+					needPlaceAction = false
+					if actionType == 'spell' then
+						PickupSpell(actionID)
+						needPlaceAction = true
+					elseif actionType == 'mount' then
+						for i=1, C_MountJournal.GetNumMounts() do
+							local spellID = select(2, C_MountJournal.GetDisplayedMountInfo(i))
+							if spellID == actionID then
+								C_MountJournal.Pickup(i)
+								needPlaceAction = true
+								break;
+							end
+						end
+					elseif actionType == 'item' or actionType == 'toy' then
+						local item = Item:CreateFromItemID(actionID)
+						if not item:IsItemEmpty() then
+							local itemSlot = (startIndex+slot-1)
+							item:ContinueOnItemLoad(function()
+								if actionType == 'toy' then
+									C_ToyBox.PickupToyBoxItem(actionID)
+								else
+									PickupItem(actionID)
+								end
+								PlaceAction(itemSlot)
+								ClearCursor()
+							end)
+						end
+					elseif actionType == 'summonpet' then
+						C_PetJournal.PickupPet(actionID)
+						needPlaceAction = true
+					end
+					if needPlaceAction then
+						PlaceAction(startIndex+slot-1)
+						ClearCursor()
+					end
+				else
+					if UniversalBarSettings.ClearUnsavedActionSlots then
+						PickupAction(startIndex+slot-1)
+						ClearCursor()
+					end
+				end
 			end
 		end
 	end
@@ -110,7 +116,9 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
 		if not UniversalBarSettings then
 			UniversalBarSettings = {
 				AutoLoadAtLogin = true,
-				ClearUnsavedActionSlots = true
+				ClearUnsavedActionSlots = true,
+				Bars = {},
+				BarConfig = {},
 			}
 		end
 		
