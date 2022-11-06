@@ -1,0 +1,8 @@
+## Interface: 100000
+## Title: Universal Bar
+## Notes: Allows player to set a universal hotbar that is shared across their account
+## Author: Pr3vention
+## Version: 0.0.1
+## SavedVariables: UniversalBarSettings
+
+UniversalBar.lua
