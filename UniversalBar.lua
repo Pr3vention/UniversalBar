@@ -53,41 +53,48 @@ function UniversalBar:LoadBarConfig()
 	assert(UniversalBarSettings.BarConfig, 'no bar config has been set')
 	
 	local needPlaceAction = true
-	local startIndex = unpack(ActionBarSlotRanges[UniversalBarSettings.BarID])
-	for k,v in pairs(UniversalBarSettings.BarConfig) do
-		needPlaceAction = false
-		if v.type == 'spell' then
-			PickupSpell(v.id)
-			needPlaceAction = true
-		elseif v.type == 'mount' then
-			for i=1, C_MountJournal.GetNumMounts() do
-				local spellID = select(2, C_MountJournal.GetDisplayedMountInfo(i))
-				if spellID == v.id then
-					C_MountJournal.Pickup(i)
-					needPlaceAction = true
-					break;
-				end
-			end
-		elseif v.type == 'item' or v.type == 'toy' then
-			local item = Item:CreateFromItemID(v.id)
-			if not item:IsItemEmpty() then
-				local itemSlot = (startIndex+k-1)
-				item:ContinueOnItemLoad(function()
-					if v.type == 'toy' then
-						C_ToyBox.PickupToyBoxItem(v.id)
-					else
-						PickupItem(v.id)
+	local startIndex, endIndex = unpack(ActionBarSlotRanges[UniversalBarSettings.BarID])
+	for slot = 1, endIndex-startIndex+1 do
+		if UniversalBarSettings.BarConfig[slot] then
+			local actionType = UniversalBarSettings.BarConfig[slot].type
+			local actionID = UniversalBarSettings.BarConfig[slot].id
+			needPlaceAction = false
+			if actionType == 'spell' then
+				PickupSpell(actionID)
+				needPlaceAction = true
+			elseif actionType == 'mount' then
+				for i=1, C_MountJournal.GetNumMounts() do
+					local spellID = select(2, C_MountJournal.GetDisplayedMountInfo(i))
+					if spellID == actionID then
+						C_MountJournal.Pickup(i)
+						needPlaceAction = true
+						break;
 					end
-					PlaceAction(itemSlot)
-					ClearCursor()
-				end)
+				end
+			elseif actionType == 'item' or actionType == 'toy' then
+				local item = Item:CreateFromItemID(actionID)
+				if not item:IsItemEmpty() then
+					local itemSlot = (startIndex+slot-1)
+					item:ContinueOnItemLoad(function()
+						if actionType == 'toy' then
+							C_ToyBox.PickupToyBoxItem(actionID)
+						else
+							PickupItem(actionID)
+						end
+						PlaceAction(itemSlot)
+						ClearCursor()
+					end)
+				end
+			elseif actionType == 'summonpet' then
+				C_PetJournal.PickupPet(actionID)
+				needPlaceAction = true
 			end
-		elseif v.type == 'summonpet' then
-			C_PetJournal.PickupPet(v.id)
-			needPlaceAction = true
-		end
-		if needPlaceAction then
-			PlaceAction((startIndex+k-1))
+			if needPlaceAction then
+				PlaceAction(startIndex+slot-1)
+				ClearCursor()
+			end
+		else
+			PickupAction(startIndex+slot-1)
 			ClearCursor()
 		end
 	end
