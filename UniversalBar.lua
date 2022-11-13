@@ -13,6 +13,46 @@ local ActionBarSlotRanges = {
 	[8] = { 169, 180 }
 }
 
+local function GetBarInfoForSlot(slotID)
+	for barID, range in pairs(ActionBarSlotRanges) do
+		local startIndex, endIndex = unpack(range)
+		if startIndex <= slotID and slotID <= endIndex then
+			return barID, slotID - startIndex + 1
+		end
+	end
+end
+local function UpdateSlotConfig(barID, slot, slotID)
+	local actionType, id, subType = GetActionInfo(slotID)
+	if actionType == 'summonmount' then
+		local spellID = select(2, C_MountJournal.GetMountInfoByID(id))
+		actionType = 'mount'
+		id = spellID
+	elseif actionType == 'item' then
+		if C_ToyBox.GetToyInfo(id) then
+			actionType = 'toy'
+		else
+			actionType = 'item'
+		end
+	elseif actionType == 'macro' then
+		-- if the macro's ID is queried and nothing is returned, it's more likely a bad query than a bad macro.
+		-- this should never happen, but better to ignore it in saved config than to have it throw an error later
+		local name = GetMacroInfo(id)
+		if name then
+			id = name
+		else
+			actionType = nil
+			id = nil
+		end
+	end
+	if actionType then
+		UniversalBarSettings.BarConfig[barID][slot] = {
+			type = actionType,
+			id = id
+		}
+	else 
+		UniversalBarSettings.BarConfig[barID][slot] = nil
+	end
+end
 function UniversalBar:SetBarID(barID, state)
 	assert(barID >= 1 and barID <= 8, 'Invalid bar being set. You can only set bars 1 through 8')
 	UniversalBarSettings.Bars[barID] = state
@@ -27,37 +67,8 @@ function UniversalBar:SaveBarConfig()
 			UniversalBarSettings.BarConfig[barID] = {}
 			local slot = 1
 			local startIndex, endIndex = unpack(ActionBarSlotRanges[barID])
-			for i = startIndex, endIndex do
-				local actionType, id, subType = GetActionInfo(i)
-				if actionType == 'summonmount' then
-					local spellID = select(2, C_MountJournal.GetMountInfoByID(id))
-					actionType = 'mount'
-					id = spellID
-				elseif actionType == 'item' then
-					if C_ToyBox.GetToyInfo(id) then
-						actionType = 'toy'
-					else
-						actionType = 'item'
-					end
-				elseif actionType == 'macro' then
-					-- if the macro's ID is queried and nothing is returned, it's more likely a bad query than a bad macro.
-					-- this should never happen, but better to ignore it in saved config than to have it throw an error later
-					local name = GetMacroInfo(id)
-					if name then
-						id = name
-					else
-						actionType = nil
-						id = nil
-					end
-				end
-				if actionType then
-					UniversalBarSettings.BarConfig[barID][slot] = {
-						type = actionType,
-						id = id
-					}
-				else 
-					UniversalBarSettings.BarConfig[barID][slot] = nil
-				end
+			for slotID = startIndex, endIndex do
+				UpdateSlotConfig(barID, slot, slotID)
 				slot = slot + 1
 			end
 		end
@@ -133,6 +144,13 @@ function UniversalBar:SetActionSlotChangeEvent(state)
 		UniversalBar.frame:UnregisterEvent('ACTIONBAR_SLOT_CHANGED')
 	end
 end
+function UniversalBar:UpdateConfigForSlot(slotID)
+	if not slotID then return end
+	local barID, slot = GetBarInfoForSlot(slotID)
+	if barID and UniversalBarSettings.Bars[barID] then
+		UpdateSlotConfig(barID, slot, slotID)
+	end
+end
 
 local keys = 0
 local eventFrame = CreateFrame("FRAME", "UniversalBarEventFrame", UIParent)
@@ -172,6 +190,7 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
 		
 		UniversalBar:SetActionSlotChangeEvent(UniversalBarSettings.AutosaveSlotChanges)
 	elseif event == 'ACTIONBAR_SLOT_CHANGED' and UniversalBarSettings.AutosaveSlotChanges then
+		UniversalBar:UpdateConfigForSlot(...)
 	end
 end)
 UniversalBar.frame = eventFrame
