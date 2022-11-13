@@ -39,6 +39,16 @@ function UniversalBar:SaveBarConfig()
 					else
 						actionType = 'item'
 					end
+				elseif actionType == 'macro' then
+					-- if the macro's ID is queried and nothing is returned, it's more likely a bad query than a bad macro.
+					-- this should never happen, but better to ignore it in saved config than to have it throw an error later
+					local name = GetMacroInfo(id)
+					if name then
+						id = name
+					else
+						actionType = nil
+						id = nil
+					end
 				end
 				if actionType then
 					UniversalBarSettings.BarConfig[barID][slot] = {
@@ -97,6 +107,9 @@ function UniversalBar:LoadBarConfig()
 						end
 					elseif actionType == 'summonpet' then
 						C_PetJournal.PickupPet(actionID)
+						needPlaceAction = true
+					elseif actionType == 'macro' then
+						PickupMacro(actionID)
 						needPlaceAction = true
 					end
 					if needPlaceAction then
