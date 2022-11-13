@@ -126,9 +126,17 @@ function UniversalBar:LoadBarConfig()
 		end
 	end
 end
+function UniversalBar:SetActionSlotChangeEvent(state)
+	if state then
+		UniversalBar.frame:RegisterEvent('ACTIONBAR_SLOT_CHANGED')
+	else
+		UniversalBar.frame:UnregisterEvent('ACTIONBAR_SLOT_CHANGED')
+	end
+end
 
 local keys = 0
 local eventFrame = CreateFrame("FRAME", "UniversalBarEventFrame", UIParent)
+-- loginEvents are specific to the timing of when the action bar should get loaded
 local loginEvents = {
 	ADDON_LOADED = true,
 	PLAYER_ENTERING_WORLD = true,
@@ -146,6 +154,7 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
 				UniversalBarSettings = {
 					AutoLoadAtLogin = true,
 					ClearUnsavedActionSlots = true,
+					AutosaveSlotChanges = false,
 					Bars = {},
 					BarConfig = {},
 				}
@@ -160,6 +169,9 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
 				UniversalBar:LoadBarConfig()
 			end
 		end
+		
+		UniversalBar:SetActionSlotChangeEvent(UniversalBarSettings.AutosaveSlotChanges)
+	elseif event == 'ACTIONBAR_SLOT_CHANGED' and UniversalBarSettings.AutosaveSlotChanges then
 	end
 end)
 UniversalBar.frame = eventFrame

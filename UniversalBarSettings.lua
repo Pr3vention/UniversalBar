@@ -29,11 +29,20 @@ frame:SetScript("OnShow", function(frame)
 	clearUnsavedActionSlots:SetChecked(UniversalBarSettings.ClearUnsavedActionSlots)
 	clearUnsavedActionSlots:SetPoint("TOPLEFT", autoLoadAtLoginCheckbox, "BOTTOMLEFT", 0, 0)
 	
+	local AutosaveSlotChangesCheckbox = newCheckbox('AutosaveSlotChanges', 'Automatically update shared bar configuration when a change is made', 
+		function(self)
+			UniversalBarSettings.AutosaveSlotChanges = self:GetChecked()
+			UniversalBar:SetActionSlotChangeEvent(UniversalBarSettings.AutosaveSlotChanges)
+		end
+	)
+	AutosaveSlotChangesCheckbox:SetChecked(UniversalBarSettings.AutosaveSlotChanges)
+	AutosaveSlotChangesCheckbox:SetPoint("TOPLEFT", clearUnsavedActionSlots, "BOTTOMLEFT", 0, 0)
+	
 	local unibar1 = newCheckbox('unibar1', 'Action Bar 1', 
 		function(self) UniversalBar:SetBarID(1, self:GetChecked()) end
 	)
 	unibar1:SetChecked(UniversalBarSettings.Bars[1])
-	unibar1:SetPoint("TOPLEFT", clearUnsavedActionSlots, "BOTTOMLEFT", 0, -16)
+	unibar1:SetPoint("TOPLEFT", AutosaveSlotChangesCheckbox, "BOTTOMLEFT", 0, -16)
 	
 	local unibar2 = newCheckbox('unibar2', 'Action Bar 2', 
 		function(self) UniversalBar:SetBarID(2, self:GetChecked()) end
