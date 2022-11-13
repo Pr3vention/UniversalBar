@@ -149,6 +149,9 @@ function UniversalBar:UpdateConfigForSlot(slotID)
 	if not slotID then return end
 	local barID, slot = GetBarInfoForSlot(slotID)
 	if barID and UniversalBarSettings.Bars[barID] then
+		if not UniversalBarSettings.BarConfig[barID] then 
+			UniversalBarSettings.BarConfig[barID] = {}
+		end
 		UpdateSlotConfig(barID, slot, slotID)
 	end
 end
