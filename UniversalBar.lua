@@ -1,5 +1,6 @@
 local addonName, UniversalBar = ...
 local blizzardSettings = Settings
+local L = UniversalBar.L
 
 -- blizzard's slotIDs are all over the place... no clue why
 local ActionBarSlotRanges = {
@@ -54,7 +55,7 @@ local function UpdateSlotConfig(barID, slot, slotID)
 	end
 end
 function UniversalBar:SetBarID(barID, state)
-	assert(barID >= 1 and barID <= 8, 'Invalid bar being set. You can only set bars 1 through 8')
+	assert(barID >= 1 and barID <= 8, L.Errors.UnsupportedBar)
 	UniversalBarSettings.Bars[barID] = state
 end
 function UniversalBar:SaveBarConfig()

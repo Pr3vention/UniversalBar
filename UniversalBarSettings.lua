@@ -1,4 +1,5 @@
 local addonName, UniversalBar = ...
+local L = UniversalBar.L
 
 local frame = UniversalBar.frame
 frame.name = addonName
@@ -17,19 +18,19 @@ frame:SetScript("OnShow", function(frame)
 	title:SetPoint("TOPLEFT", 16, -16)
 	title:SetText(addonName)
 	
-	local autoLoadAtLoginCheckbox = newCheckbox('AutoLoadAtLogin', 'Automatically load at login', 
+	local autoLoadAtLoginCheckbox = newCheckbox('AutoLoadAtLogin', L.Settings.AutoLoadAtLogin, 
 		function(self) UniversalBarSettings.AutoLoadAtLogin = self:GetChecked() end
 	)
 	autoLoadAtLoginCheckbox:SetChecked(UniversalBarSettings.AutoLoadAtLogin)
 	autoLoadAtLoginCheckbox:SetPoint("TOPLEFT", title, "BOTTOMLEFT", -3, -16)
 	
-	local clearUnsavedActionSlots = newCheckbox('ClearUnsavedActionSlots', 'Clear slots that are not saved in universal configuration', 
+	local clearUnsavedActionSlots = newCheckbox('ClearUnsavedActionSlots', L.Settings.ClearUnsavedActionSlots, 
 		function(self) UniversalBarSettings.ClearUnsavedActionSlots = self:GetChecked() end
 	)
 	clearUnsavedActionSlots:SetChecked(UniversalBarSettings.ClearUnsavedActionSlots)
 	clearUnsavedActionSlots:SetPoint("TOPLEFT", autoLoadAtLoginCheckbox, "BOTTOMLEFT", 0, 0)
 	
-	local AutosaveSlotChangesCheckbox = newCheckbox('AutosaveSlotChanges', 'Automatically update shared bar configuration when a change is made', 
+	local AutosaveSlotChangesCheckbox = newCheckbox('AutosaveSlotChanges', L.Settings.AutosaveSlotChanges, 
 		function(self)
 			UniversalBarSettings.AutosaveSlotChanges = self:GetChecked()
 			UniversalBar:SetActionSlotChangeEvent(UniversalBarSettings.AutosaveSlotChanges)
@@ -38,56 +39,56 @@ frame:SetScript("OnShow", function(frame)
 	AutosaveSlotChangesCheckbox:SetChecked(UniversalBarSettings.AutosaveSlotChanges)
 	AutosaveSlotChangesCheckbox:SetPoint("TOPLEFT", clearUnsavedActionSlots, "BOTTOMLEFT", 0, 0)
 	
-	local unibar1 = newCheckbox('unibar1', 'Action Bar 1', 
+	local unibar1 = newCheckbox('unibar1', L.Bars.Bar1, 
 		function(self) UniversalBar:SetBarID(1, self:GetChecked()) end
 	)
 	unibar1:SetChecked(UniversalBarSettings.Bars[1])
 	unibar1:SetPoint("TOPLEFT", AutosaveSlotChangesCheckbox, "BOTTOMLEFT", 0, -16)
 	
-	local unibar2 = newCheckbox('unibar2', 'Action Bar 2', 
+	local unibar2 = newCheckbox('unibar2', L.Bars.Bar2, 
 		function(self) UniversalBar:SetBarID(2, self:GetChecked()) end
 	)
 	unibar2:SetChecked(UniversalBarSettings.Bars[2])
 	unibar2:SetPoint("TOPLEFT", unibar1, "BOTTOMLEFT", 0, 0)
 	
-	local unibar3 = newCheckbox('unibar3', 'Action Bar 3', 
+	local unibar3 = newCheckbox('unibar3', L.Bars.Bar3, 
 		function(self) UniversalBar:SetBarID(3, self:GetChecked()) end
 	)
 	unibar3:SetChecked(UniversalBarSettings.Bars[3])
 	unibar3:SetPoint("TOPLEFT", unibar2, "BOTTOMLEFT", 0, 0)
 	
-	local unibar4 = newCheckbox('unibar4', 'Action Bar 4', 
+	local unibar4 = newCheckbox('unibar4', L.Bars.Bar4, 
 		function(self) UniversalBar:SetBarID(4, self:GetChecked()) end
 	)
 	unibar4:SetChecked(UniversalBarSettings.Bars[4])
 	unibar4:SetPoint("TOPLEFT", unibar3, "BOTTOMLEFT", 0, 0)
 	
-	local unibar5 = newCheckbox('unibar5', 'Action Bar 5', 
+	local unibar5 = newCheckbox('unibar5', L.Bars.Bar5, 
 		function(self) UniversalBar:SetBarID(5, self:GetChecked()) end
 	)
 	unibar5:SetChecked(UniversalBarSettings.Bars[5])
 	unibar5:SetPoint("LEFT", unibar1.label, "RIGHT", 16, 0)
 	
-	local unibar6 = newCheckbox('unibar6', 'Action Bar 6', 
+	local unibar6 = newCheckbox('unibar6', L.Bars.Bar6, 
 		function(self) UniversalBar:SetBarID(6, self:GetChecked()) end
 	)
 	unibar6:SetChecked(UniversalBarSettings.Bars[6])
 	unibar6:SetPoint("TOPLEFT", unibar5, "BOTTOMLEFT", 0, 0)
 	
-	local unibar7 = newCheckbox('unibar7', 'Action Bar 7', 
+	local unibar7 = newCheckbox('unibar7', L.Bars.Bar7, 
 		function(self) UniversalBar:SetBarID(7, self:GetChecked()) end
 	)
 	unibar7:SetChecked(UniversalBarSettings.Bars[7])
 	unibar7:SetPoint("TOPLEFT", unibar6, "BOTTOMLEFT", 0, 0)
 	
-	local unibar8 = newCheckbox('unibar8', 'Action Bar 8', 
+	local unibar8 = newCheckbox('unibar8', L.Bars.Bar8, 
 		function(self) UniversalBar:SetBarID(8, self:GetChecked()) end
 	)
 	unibar8:SetChecked(UniversalBarSettings.Bars[8])
 	unibar8:SetPoint("TOPLEFT", unibar7, "BOTTOMLEFT", 0, 0)
 	
 	local saveBarConfigButton = CreateFrame("Button", "UniversalBarSaveBarConfigButton", frame, "UIPanelButtonTemplate")
-	saveBarConfigButton:SetText('Save bars')
+	saveBarConfigButton:SetText(L.Settings.Actions.SaveBars)
 	saveBarConfigButton:SetWidth(140)
 	saveBarConfigButton:SetHeight(24)
 	saveBarConfigButton:SetPoint("TOPLEFT", unibar4, "BOTTOMLEFT", 3, -16)
@@ -96,7 +97,7 @@ frame:SetScript("OnShow", function(frame)
 	end)
 	
 	local loadBarConfigButton = CreateFrame("Button", "UniversalBarLoadBarConfigButton", frame, "UIPanelButtonTemplate")
-	loadBarConfigButton:SetText('Load bars')
+	loadBarConfigButton:SetText(L.Settings.Actions.LoadBars)
 	loadBarConfigButton:SetWidth(140)
 	loadBarConfigButton:SetHeight(24)
 	loadBarConfigButton:SetPoint("LEFT", saveBarConfigButton, "RIGHT", 16, 0)
@@ -105,7 +106,7 @@ frame:SetScript("OnShow", function(frame)
 	end)
 	
 	local clearBarConfigButton = CreateFrame("Button", "UniversalBarLoadBarConfigButton", frame, "UIPanelButtonTemplate")
-	clearBarConfigButton:SetText('Clear bars')
+	clearBarConfigButton:SetText(L.Settings.Actions.ClearBars)
 	clearBarConfigButton:SetWidth(140)
 	clearBarConfigButton:SetHeight(24)
 	clearBarConfigButton:SetPoint("LEFT", loadBarConfigButton, "RIGHT", 16, 0)

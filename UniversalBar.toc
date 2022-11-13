@@ -8,5 +8,7 @@
 ## X-Wago-ID: 9rN44wND
 ## SavedVariables: UniversalBarSettings
 
+Localization/enUS.lua
+
 UniversalBar.lua
 UniversalBarSettings.lua
