@@ -157,7 +157,7 @@ function UniversalBar:UpdateConfigForSlot(slotID)
 end
 
 local keys = 0
-local eventFrame = CreateFrame("FRAME", "UniversalBarEventFrame", UIParent)
+local eventFrame = CreateFrame("FRAME")
 -- loginEvents are specific to the timing of when the action bar should get loaded
 local loginEvents = {
 	ADDON_LOADED = true,
