@@ -165,11 +165,7 @@ local loginEvents = {
 	SPELLS_CHANGED = true,
 	PET_JOURNAL_LIST_UPDATE = true,
 }
-for event in pairs(loginEvents) do
-	eventFrame:RegisterEvent(event)
-	keys = keys + 1
-end
-eventFrame:SetScript("OnEvent", function(self, event, ...)
+local function EventFrameEventHandler(event, ...)
 	if loginEvents[event] then
 		if event == 'ADDON_LOADED' and addonName == select(1,...) then
 			if not UniversalBarSettings then
@@ -196,5 +192,11 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
 	elseif event == 'ACTIONBAR_SLOT_CHANGED' and UniversalBarSettings.AutosaveSlotChanges then
 		UniversalBar:UpdateConfigForSlot(...)
 	end
-end)
+end
+eventFrame:SetScript("OnEvent", EventFrameEventHandler)
 UniversalBar.frame = eventFrame
+
+for event in pairs(loginEvents) do
+	eventFrame:RegisterEvent(event)
+	keys = keys + 1
+end
