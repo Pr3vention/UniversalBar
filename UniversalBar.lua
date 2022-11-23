@@ -140,9 +140,9 @@ function UniversalBar:LoadBarConfig()
 end
 function UniversalBar:SetActionSlotChangeEvent(state)
 	if state then
-		UniversalBar.frame:RegisterEvent('ACTIONBAR_SLOT_CHANGED')
+		UniversalBar.eventFrame:RegisterEvent('ACTIONBAR_SLOT_CHANGED')
 	else
-		UniversalBar.frame:UnregisterEvent('ACTIONBAR_SLOT_CHANGED')
+		UniversalBar.eventFrame:UnregisterEvent('ACTIONBAR_SLOT_CHANGED')
 	end
 end
 function UniversalBar:UpdateConfigForSlot(slotID)
@@ -165,18 +165,10 @@ local loginEvents = {
 	SPELLS_CHANGED = true,
 	PET_JOURNAL_LIST_UPDATE = true,
 }
-local function EventFrameEventHandler(event, ...)
+function eventFrame:EventHandler(event, ...)
 	if loginEvents[event] then
 		if event == 'ADDON_LOADED' and addonName == select(1,...) then
-			if not UniversalBarSettings then
-				UniversalBarSettings = {
-					AutoLoadAtLogin = true,
-					ClearUnsavedActionSlots = true,
-					AutosaveSlotChanges = false,
-					Bars = {},
-					BarConfig = {},
-				}
-			end
+			UniversalBar:InitializeSettings()
 		end
 		loginEvents[event] = nil
 		keys = keys - 1
@@ -193,9 +185,8 @@ local function EventFrameEventHandler(event, ...)
 		UniversalBar:UpdateConfigForSlot(...)
 	end
 end
-eventFrame:SetScript("OnEvent", EventFrameEventHandler)
-UniversalBar.frame = eventFrame
-
+eventFrame:SetScript("OnEvent", eventFrame.EventHandler)
+UniversalBar.eventFrame = eventFrame
 for event in pairs(loginEvents) do
 	eventFrame:RegisterEvent(event)
 	keys = keys + 1
