@@ -2,7 +2,7 @@
 ## Title: Universal Bar
 ## Notes: Allows player to set a universal hotbar that is shared across their account
 ## Author: Pr3vention
-## Version: 1.0.3
+## Version: 1.0.4
 ## X-Curse-Project-ID: 698442
 ## X-WoWI-ID: 26451
 ## X-Wago-ID: 9rN44wND
