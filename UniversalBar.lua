@@ -1,5 +1,4 @@
 local addonName, UniversalBar = ...
-local blizzardSettings = Settings
 local L = UniversalBar.L
 
 -- blizzard's slotIDs are all over the place... no clue why
@@ -76,8 +75,14 @@ function UniversalBar:SaveBarConfig()
 	end
 end
 local function SetBarVisibility(barID, state)
-	if barID > 1 then
-		blizzardSettings.SetValue('PROXY_SHOW_ACTIONBAR_' .. barID, state)
+	if barID == 1 then MainMenuBar:SetShown(state)
+	elseif barID == 2 then MultiBarBottomLeft:SetShown(state)
+	elseif barID == 3 then MultiBarBottomRight:SetShown(state)
+	elseif barID == 4 then MultiBarRight:SetShown(state)
+	elseif barID == 5 then MultiBarLeft:SetShown(state)
+	elseif barID == 6 then MultiBar5:SetShown(state)
+	elseif barID == 7 then MultiBar6:SetShown(state)
+	elseif barID == 8 then MultiBar7:SetShown(state)
 	end
 end
 function UniversalBar:LoadBarConfig()
