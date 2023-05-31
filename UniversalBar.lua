@@ -78,21 +78,30 @@ function UniversalBar:SaveBarConfig()
 		end
 	end
 end
-local function SetBarVisibility(barID, state)
-	if barID == 1 then MainMenuBar:SetShown(state)
-	elseif barID == 2 then MultiBarBottomLeft:SetShown(state)
-	elseif barID == 3 then MultiBarBottomRight:SetShown(state)
-	elseif barID == 4 then MultiBarRight:SetShown(state)
-	elseif barID == 5 then MultiBarLeft:SetShown(state)
-	elseif barID == 6 then MultiBar5:SetShown(state)
-	elseif barID == 7 then MultiBar6:SetShown(state)
-	elseif barID == 8 then MultiBar7:SetShown(state)
-	end
+local function SetBarVisibility(bars)
+	if barID == 1 then MainMenuBar:SetShown(state) end
+	local bar2, bar3, bar4, bar5, bar6, bar7, bar8 = GetActionBarToggles()
+	SetActionBarToggles(
+		bars[2] or bar2, 
+		bars[3] or bar3, 
+		bars[4] or bar4, 
+		bars[5] or bar5, 
+		bars[6] or bar6, 
+		bars[7] or bar7, 
+		bars[8] or bar8
+	)
+	if bar2 then MultiBarBottomLeft:SetShown(bars[2] or bar2) end
+	if bar3 then MultiBarBottomRight:SetShown(bars[3] or bar3) end
+	if bar4 then MultiBarRight:SetShown(bars[4] or bar4) end
+	if bar5 then MultiBarLeft:SetShown(bars[5] or bar5) end
+	if bar6 then MultiBar5:SetShown(bars[6] or bar6) end
+	if bar7 then MultiBar6:SetShown(bars[7] or bar6) end
+	if bar8 then MultiBar7:SetShown(bars[8] or bar6) end
 end
 function UniversalBar:LoadBarConfig()
+	SetBarVisibility(UniversalBarSettings.Bars or {})
 	for barID, state in pairs(UniversalBarSettings.Bars or {}) do
 		if state then
-			SetBarVisibility(barID, state)
 			local needPlaceAction = true
 			local startIndex, endIndex = unpack(ActionBarSlotRanges[barID])
 			for slot = 1, endIndex-startIndex+1 do
