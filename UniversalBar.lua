@@ -100,65 +100,77 @@ local function SetBarVisibility(bars)
 end
 function UniversalBar:LoadBarConfig()
 	SetBarVisibility(UniversalBarSettings.Bars or {})
-	for barID, state in pairs(UniversalBarSettings.Bars or {}) do
-		if state then
-			local needPlaceAction = true
-			local startIndex, endIndex = unpack(ActionBarSlotRanges[barID])
-			for slot = 1, endIndex-startIndex+1 do
-				if UniversalBarSettings.BarConfig[barID][slot] then
-					local actionType, actionID = UniversalBarSettings.BarConfig[barID][slot].type, UniversalBarSettings.BarConfig[barID][slot].id
+	local Barloader = coroutine.create(function()
+		for barID, state in pairs(UniversalBarSettings.Bars or {}) do
+			if state then
+				local needPlaceAction = true
+				local startIndex, endIndex = unpack(ActionBarSlotRanges[barID])
+				for slot = 1, endIndex-startIndex+1 do
 					local currentActionType, currentActionID = GetActionInfo(startIndex+slot-1)
-					
-					-- if the current slot's type and identifier are the same as what's already on the bar, we don't have to bother processing it
-					if currentActionType ~= actionType or currentActionID ~= actionID then
-						needPlaceAction = false
-						if actionType == 'spell' then
-							PickupSpell(actionID)
-							needPlaceAction = true
-						elseif actionType == 'mount' then
-							for i=1, C_MountJournal.GetNumMounts() do
-								local spellID = select(2, C_MountJournal.GetDisplayedMountInfo(i))
-								if spellID == actionID then
-									C_MountJournal.Pickup(i)
-									needPlaceAction = true
-									break;
-								end
-							end
-						elseif actionType == 'item' or actionType == 'toy' then
-							local item = Item:CreateFromItemID(actionID)
-							if not item:IsItemEmpty() then
-								local itemSlot = (startIndex+slot-1)
-								item:ContinueOnItemLoad(function()
-									if actionType == 'toy' then
-										C_ToyBox.PickupToyBoxItem(actionID)
-									else
-										PickupItem(actionID)
+					if UniversalBarSettings.BarConfig[barID][slot] then
+						local actionType, actionID = UniversalBarSettings.BarConfig[barID][slot].type, UniversalBarSettings.BarConfig[barID][slot].id
+						
+						-- if the current slot's type and identifier are the same as what's already on the bar, we don't have to bother processing it
+						if currentActionType ~= actionType or currentActionID ~= actionID then
+							needPlaceAction = false
+							if actionType == 'spell' then
+								PickupSpell(actionID)
+								needPlaceAction = true
+							elseif actionType == 'mount' then
+								for i=1, C_MountJournal.GetNumMounts() do
+									local spellID = select(2, C_MountJournal.GetDisplayedMountInfo(i))
+									if spellID == actionID then
+										C_MountJournal.Pickup(i)
+										needPlaceAction = true
+										break;
 									end
-									PlaceAction(itemSlot)
-									ClearCursor()
-								end)
+								end
+							elseif actionType == 'item' or actionType == 'toy' then
+								local item = Item:CreateFromItemID(actionID)
+								if not item:IsItemEmpty() then
+									local itemSlot = (startIndex+slot-1)
+									item:ContinueOnItemLoad(function()
+										if actionType == 'toy' then
+											C_ToyBox.PickupToyBoxItem(actionID)
+										else
+											PickupItem(actionID)
+										end
+										PlaceAction(itemSlot)
+										ClearCursor()
+									end)
+								end
+							elseif actionType == 'summonpet' then
+								C_PetJournal.PickupPet(actionID)
+								needPlaceAction = true
+							elseif actionType == 'macro' then
+								PickupMacro(actionID)
+								needPlaceAction = true
 							end
-						elseif actionType == 'summonpet' then
-							C_PetJournal.PickupPet(actionID)
-							needPlaceAction = true
-						elseif actionType == 'macro' then
-							PickupMacro(actionID)
-							needPlaceAction = true
+							if needPlaceAction then
+								PlaceAction(startIndex+slot-1)
+								ClearCursor()
+							end
 						end
-						if needPlaceAction then
-							PlaceAction(startIndex+slot-1)
+					else
+						if UniversalBarSettings.ClearUnsavedActionSlots and currentActionType then
+							PickupAction(startIndex+slot-1)
 							ClearCursor()
 						end
 					end
-				else
-					if UniversalBarSettings.ClearUnsavedActionSlots then
-						PickupAction(startIndex+slot-1)
-						ClearCursor()
-					end
+					coroutine.yield()
 				end
 			end
 		end
-	end
+		BarsLoading = false
+	end)
+	BarsLoading = true
+	local ticker 
+	ticker = C_Timer.NewTicker(0, function()
+		coroutine.resume(Barloader)
+		if not BarsLoading then
+			ticker:Cancel()
+		end
+	end)
 end
 function UniversalBar:SetActionSlotChangeEvent(state)
 	if state then
