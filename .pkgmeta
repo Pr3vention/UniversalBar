@@ -1,0 +1,13 @@
+enable-nolib-creation: no
+
+wowi-archive-previous: yes
+
+# package-as:
+# externals:
+# move-folders:
+# ignore:
+# required-dependencies:
+# optional-dependencies:
+# embedded-libraries:
+# tools-used:
+# manual-changelog:
