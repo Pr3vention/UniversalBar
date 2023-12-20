@@ -14,6 +14,7 @@ L.Bars = {
 }
 L.Errors = {
 	UnsupportedBar = 'Unsupported bar being set. You can only set bars 1 through 8',
+	UnknownEquipmentSet = 'Unknown equipment set name in saved configuration: %s',
 }
 L.Settings = {
 	AutoLoadAtLogin = 'Automatically load at login',

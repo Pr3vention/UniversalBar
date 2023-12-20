@@ -2,8 +2,8 @@ local addonName, UniversalBar = ...
 local L = UniversalBar.L
 
 -- local references
-local C_ToyBox, C_MountJournal, C_PetJournal, GetActionInfo, GetMacroInfo =
-	  C_ToyBox, C_MountJournal, C_PetJournal, GetActionInfo, GetMacroInfo
+local C_ToyBox, C_MountJournal, C_PetJournal, C_EquipmentSet, GetActionInfo, GetMacroInfo =
+	  C_ToyBox, C_MountJournal, C_PetJournal, C_EquipmentSet, GetActionInfo, GetMacroInfo
 
 -- blizzard's slotIDs are all over the place... no clue why
 local ActionBarSlotRanges = {
@@ -16,6 +16,10 @@ local ActionBarSlotRanges = {
 	[7] = { 157, 168 },
 	[8] = { 169, 180 }
 }
+
+local function PrintMessage(msg)
+	print(string.format('%s: %s', addonName, msg))
+end
 
 local function GetBarInfoForSlot(slotID)
 	for barID, range in pairs(ActionBarSlotRanges) do
@@ -145,6 +149,15 @@ function UniversalBar:LoadBarConfig()
 							elseif actionType == 'macro' then
 								PickupMacro(actionID)
 								needPlaceAction = true
+							elseif actionType == 'equipmentset' then
+								local setID = C_EquipmentSet.GetEquipmentSetID(actionID)
+								if setID then
+									C_EquipmentSet.PickupEquipmentSet(setID)
+									needPlaceAction = true
+								else
+									PrintMessage(string.format(UniversalBar.L.Errors.UnknownEquipmentSet, actionID))
+									needPlaceAction = false
+								end
 							end
 							if needPlaceAction then
 								PlaceAction(startIndex+slot-1)
