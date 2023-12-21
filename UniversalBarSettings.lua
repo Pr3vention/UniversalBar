@@ -131,3 +131,20 @@ function UniversalBar:InitializeSettings()
 	
 	InterfaceOptions_AddCategory(frame)
 end
+
+local SettingsCategoryID
+function UniversalBar_OnAddonCompartmentClick(addonName, buttonName, menuButtonFrame)
+	if not SettingsCategoryID then
+		for _,v in pairs(SettingsPanel:GetAllCategories()) do
+		   if v:GetName() == addonName then
+			  SettingsCategoryID = v:GetID()
+			  break
+		   end
+		end
+	end
+	if SettingsCategoryID then
+	   SettingsPanel:OpenToCategory(SettingsCategoryID)
+	else
+		error("Unable to locate settings panel ID for " .. addonName)
+	end
+end
