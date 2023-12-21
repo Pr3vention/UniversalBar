@@ -116,7 +116,7 @@ function UniversalBar:InitializeSettings()
 		UniversalBar:LoadBarConfig()
 	end)
 
-	local clearBarConfigButton = CreateFrame("Button", "UniversalBarLoadBarConfigButton", frame, "UIPanelButtonTemplate")
+	local clearBarConfigButton = CreateFrame("Button", "UniversalBarClearBarConfigButton", frame, "UIPanelButtonTemplate")
 	clearBarConfigButton:SetText(L.Settings.Actions.ClearBars)
 	clearBarConfigButton:SetWidth(140)
 	clearBarConfigButton:SetHeight(24)
