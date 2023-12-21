@@ -4,6 +4,8 @@ local L = UniversalBar.L
 -- local references
 local C_ToyBox, C_MountJournal, C_PetJournal, C_EquipmentSet, GetActionInfo, GetMacroInfo =
 	  C_ToyBox, C_MountJournal, C_PetJournal, C_EquipmentSet, GetActionInfo, GetMacroInfo
+	  
+local SUMMON_FAVORITE_MOUNT = 268435455
 
 -- blizzard's slotIDs are all over the place... no clue why
 local ActionBarSlotRanges = {
@@ -32,9 +34,13 @@ end
 local function UpdateSlotConfig(barID, slot, slotID)
 	local actionType, id, subType = GetActionInfo(slotID)
 	if actionType == 'summonmount' then
-		local spellID = select(2, C_MountJournal.GetMountInfoByID(id))
 		actionType = 'mount'
-		id = spellID
+		if id == SUMMON_FAVORITE_MOUNT then
+			id = 0
+		else
+			local spellID = select(2, C_MountJournal.GetMountInfoByID(id))
+			id = spellID
+		end
 	elseif actionType == 'item' then
 		if C_ToyBox.GetToyInfo(id) then
 			actionType = 'toy'
@@ -121,12 +127,17 @@ function UniversalBar:LoadBarConfig()
 								PickupSpell(actionID)
 								needPlaceAction = true
 							elseif actionType == 'mount' then
-								for i=1, C_MountJournal.GetNumMounts() do
-									local spellID = select(2, C_MountJournal.GetDisplayedMountInfo(i))
-									if spellID == actionID then
-										C_MountJournal.Pickup(i)
-										needPlaceAction = true
-										break;
+								if actionID == 0 then
+									C_MountJournal.Pickup(0)
+									needPlaceAction = true
+								else
+									for i=1, C_MountJournal.GetNumMounts() do
+										local spellID = select(2, C_MountJournal.GetDisplayedMountInfo(i))
+										if spellID == actionID then
+											C_MountJournal.Pickup(i)
+											needPlaceAction = true
+											break
+										end
 									end
 								end
 							elseif actionType == 'item' or actionType == 'toy' then
