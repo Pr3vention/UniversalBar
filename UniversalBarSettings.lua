@@ -3,6 +3,8 @@ local L = UniversalBar.L
 
 local frame = CreateFrame("FRAME")
 frame.name = addonName
+local category = Settings.RegisterCanvasLayoutCategory(frame, frame.name);
+Settings.RegisterAddOnCategory(category);
 
 local defaultOptions = {
 	AutoLoadAtLogin = true,
@@ -128,8 +130,6 @@ function UniversalBar:InitializeSettings()
 			UniversalBarSettings.Bars[i] = false
 		end
 	end)
-	
-	InterfaceOptions_AddCategory(frame)
 end
 
 local SettingsCategoryID
