@@ -222,6 +222,7 @@ local loginEvents = {
 	PLAYER_ENTERING_WORLD = true,
 	SPELLS_CHANGED = true,
 	PET_JOURNAL_LIST_UPDATE = true,
+	TOYS_UPDATED = true
 }
 function eventFrame:EventHandler(event, ...)
 	if loginEvents[event] then
