@@ -25,6 +25,7 @@ L.Settings = {
 	AutoLoadAtLogin = 'Automatically load at login',
 	ClearUnsavedActionSlots = 'Clear slots that are not saved in universal configuration',
 	AutosaveSlotChanges = 'Automatically update shared bar configuration when a change is made',
+	SettingsHeader = 'General Settings',
 	MainBarHeader = 'Action Bars',
 	BonusBarHeader = 'Bonus Bars',
 	Actions = {

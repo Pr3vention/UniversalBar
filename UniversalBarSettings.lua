@@ -29,13 +29,13 @@ function UniversalBar:InitializeSettings()
 
 	local title = frame:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 	title:SetPoint("TOPLEFT", 16, -16)
-	title:SetText(addonName)
+	title:SetText(L.Settings.SettingsHeader)
 
 	local autoLoadAtLoginCheckbox = newCheckbox('AutoLoadAtLogin', L.Settings.AutoLoadAtLogin, 
 		function(self) UniversalBarSettings.AutoLoadAtLogin = self:GetChecked() end
 	)
 	autoLoadAtLoginCheckbox:SetChecked(UniversalBarSettings.AutoLoadAtLogin)
-	autoLoadAtLoginCheckbox:SetPoint("TOPLEFT", title, "BOTTOMLEFT", -3, -16)
+	autoLoadAtLoginCheckbox:SetPoint("TOPLEFT", title, "BOTTOMLEFT", -3, 0)
 
 	local clearUnsavedActionSlots = newCheckbox('ClearUnsavedActionSlots', L.Settings.ClearUnsavedActionSlots, 
 		function(self) UniversalBarSettings.ClearUnsavedActionSlots = self:GetChecked() end
@@ -54,13 +54,13 @@ function UniversalBar:InitializeSettings()
 
 	local actionBarText = frame:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 	actionBarText:SetPoint("TOPLEFT", AutosaveSlotChangesCheckbox, "BOTTOMLEFT", 0, -16)
-	actionBarText:SetText(L.Settings.ActionBarHeader)
+	actionBarText:SetText(L.Settings.MainBarHeader)
 	
 	local unibar1 = newCheckbox('unibar1', L.Bars.Bar1, 
 		function(self) UniversalBar:SetBarID(1, self:GetChecked()) end
 	)
 	unibar1:SetChecked(UniversalBarSettings.Bars[1])
-	unibar1:SetPoint("TOPLEFT", actionBarText, "BOTTOMLEFT", 0, -16)
+	unibar1:SetPoint("TOPLEFT", actionBarText, "BOTTOMLEFT", -3, 0)
 
 	local unibar2 = newCheckbox('unibar2', L.Bars.Bar2, 
 		function(self) UniversalBar:SetBarID(2, self:GetChecked()) end
@@ -112,7 +112,7 @@ function UniversalBar:InitializeSettings()
 		function(self) UniversalBar:SetBarID('b1', self:GetChecked()) end
 	)
 	bonus1:SetChecked(UniversalBarSettings.Bars['b1'])
-	bonus1:SetPoint("TOPLEFT", bonusBarText, "BOTTOMLEFT", 0, 0)
+	bonus1:SetPoint("TOPLEFT", bonusBarText, "BOTTOMLEFT", -3, 0)
 	
 	local bonus2 = newCheckbox('bonus2', L.Bars.Bonus2, 
 		function(self) UniversalBar:SetBarID('b2', self:GetChecked()) end
