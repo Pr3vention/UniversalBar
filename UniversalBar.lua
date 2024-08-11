@@ -125,6 +125,11 @@ function UniversalBar:LoadBarConfig()
 							needPlaceAction = false
 							if actionType == 'spell' then
 								C_Spell.PickupSpell(actionID)
+								if not GetCursorInfo() then 
+									-- some abilities that override a base spell get placed on the action bar as the base spell even though it isn't available in the spellbook anymore
+									-- when this happens, we should be able to get the base spell and pick that one up.
+									C_Spell.PickupSpell(FindBaseSpellByID(actionID))
+								end
 								needPlaceAction = true
 							elseif actionType == 'mount' then
 								if actionID == 0 then
