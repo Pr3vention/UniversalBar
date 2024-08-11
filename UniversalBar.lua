@@ -7,13 +7,21 @@ local C_ToyBox, C_MountJournal, C_PetJournal, C_EquipmentSet, GetActionInfo, Get
 	  
 local SUMMON_FAVORITE_MOUNT = 268435455
 
--- blizzard's slotIDs are all over the place... no clue why
+-- blizzard's slotIDs are all over the place... no clue why.
+-- Blizzard shouldn't change these without reengineering the entire actionbar system, so we're safe to hardcode them
 local ActionBarSlotRanges = {
 	[1] = { 1, 12 },
-	[2] = { 61, 72 },
-	[3] = { 49, 60 },
+	['1p2'] = { 13, 24 }, -- action bar page 2
 	[4] = { 25, 36 },
 	[5] = { 37, 48 },
+	[3] = { 49, 60 },
+	[2] = { 61, 72 },
+	['b1'] = { 73, 84 }, -- druid cat, rogue stealth
+	['b2'] = { 85, 96 }, -- druid cat stealth
+	['b3'] = { 97, 108 }, -- druid bear
+	['b4'] = { 109, 120 }, -- druid moonkin
+	['b5'] = { 121, 132 }, -- dragonriding (possibly vehicles in general)
+	['b6'] = { 133, 144 }, -- doesn't appear to be used but is still allocated slots. Could be for special scenarios
 	[6] = { 145, 156 },
 	[7] = { 157, 168 },
 	[8] = { 169, 180 }
@@ -22,7 +30,6 @@ local ActionBarSlotRanges = {
 local function PrintMessage(msg)
 	print(string.format('%s: %s', addonName, msg))
 end
-
 local function GetBarInfoForSlot(slotID)
 	for barID, range in pairs(ActionBarSlotRanges) do
 		local startIndex, endIndex = unpack(range)
@@ -67,8 +74,12 @@ local function UpdateSlotConfig(barID, slot, slotID)
 		UniversalBarSettings.BarConfig[barID][slot] = nil
 	end
 end
+
 function UniversalBar:SetBarID(barID, state)
-	assert(barID >= 1 and barID <= 8, L.Errors.UnsupportedBar)
+	if not ActionBarSlotRanges[barID] then
+		PrintMessage(L.Errors.UnsupportedBar)
+		return
+	end
 	UniversalBarSettings.Bars[barID] = state
 end
 function UniversalBar:SaveBarConfig()
@@ -119,7 +130,6 @@ function UniversalBar:LoadBarConfig()
 					local currentActionType, currentActionID = GetActionInfo(startIndex+slot-1)
 					if UniversalBarSettings.BarConfig[barID][slot] then
 						local actionType, actionID = UniversalBarSettings.BarConfig[barID][slot].type, UniversalBarSettings.BarConfig[barID][slot].id
-						
 						-- if the current slot's type and identifier are the same as what's already on the bar, we don't have to bother processing it
 						if currentActionType ~= actionType or currentActionID ~= actionID then
 							needPlaceAction = false
