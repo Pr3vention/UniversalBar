@@ -7,13 +7,21 @@ local C_ToyBox, C_MountJournal, C_PetJournal, C_EquipmentSet, GetActionInfo, Get
 	  
 local SUMMON_FAVORITE_MOUNT = 268435455
 
--- blizzard's slotIDs are all over the place... no clue why
+-- blizzard's slotIDs are all over the place... no clue why.
+-- Blizzard shouldn't change these without reengineering the entire actionbar system, so we're safe to hardcode them
 local ActionBarSlotRanges = {
 	[1] = { 1, 12 },
-	[2] = { 61, 72 },
-	[3] = { 49, 60 },
+	['1p2'] = { 13, 24 }, -- action bar page 2
 	[4] = { 25, 36 },
 	[5] = { 37, 48 },
+	[3] = { 49, 60 },
+	[2] = { 61, 72 },
+	['b1'] = { 73, 84 }, -- druid cat, rogue stealth
+	['b2'] = { 85, 96 }, -- druid cat stealth
+	['b3'] = { 97, 108 }, -- druid bear
+	['b4'] = { 109, 120 }, -- druid moonkin
+	['b5'] = { 121, 132 }, -- dragonriding (possibly vehicles in general)
+	['b6'] = { 133, 144 }, -- doesn't appear to be used but is still allocated slots. Could be for special scenarios
 	[6] = { 145, 156 },
 	[7] = { 157, 168 },
 	[8] = { 169, 180 }
