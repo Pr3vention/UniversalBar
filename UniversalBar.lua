@@ -2,8 +2,8 @@ local addonName, UniversalBar = ...
 local L = UniversalBar.L
 
 -- local references
-local C_ToyBox, C_MountJournal, C_PetJournal, C_EquipmentSet, GetActionInfo, GetMacroInfo =
-	  C_ToyBox, C_MountJournal, C_PetJournal, C_EquipmentSet, GetActionInfo, GetMacroInfo
+local C_ToyBox, C_MountJournal, C_PetJournal, C_EquipmentSet, GetActionInfo, GetMacroInfo, C_Spell =
+	  C_ToyBox, C_MountJournal, C_PetJournal, C_EquipmentSet, GetActionInfo, GetMacroInfo, C_Spell
 	  
 local SUMMON_FAVORITE_MOUNT = 268435455
 
@@ -132,7 +132,7 @@ function UniversalBar:LoadBarConfig()
 						if currentActionType ~= actionType or currentActionID ~= actionID then
 							needPlaceAction = false
 							if actionType == 'spell' then
-								PickupSpell(actionID)
+								C_Spell.PickupSpell(actionID)
 								needPlaceAction = true
 							elseif actionType == 'mount' then
 								if actionID == 0 then
