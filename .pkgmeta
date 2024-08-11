@@ -10,4 +10,6 @@ wowi-archive-previous: yes
 # optional-dependencies:
 # embedded-libraries:
 # tools-used:
-# manual-changelog:
+manual-changelog:
+  filename: CHANGELOG.md
+  markup-type: markdown
