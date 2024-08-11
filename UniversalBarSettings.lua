@@ -52,11 +52,15 @@ function UniversalBar:InitializeSettings()
 	AutosaveSlotChangesCheckbox:SetChecked(UniversalBarSettings.AutosaveSlotChanges)
 	AutosaveSlotChangesCheckbox:SetPoint("TOPLEFT", clearUnsavedActionSlots, "BOTTOMLEFT", 0, 0)
 
+	local actionBarText = frame:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+	actionBarText:SetPoint("TOPLEFT", AutosaveSlotChangesCheckbox, "BOTTOMLEFT", 0, -16)
+	actionBarText:SetText(L.Settings.ActionBarHeader)
+	
 	local unibar1 = newCheckbox('unibar1', L.Bars.Bar1, 
 		function(self) UniversalBar:SetBarID(1, self:GetChecked()) end
 	)
 	unibar1:SetChecked(UniversalBarSettings.Bars[1])
-	unibar1:SetPoint("TOPLEFT", AutosaveSlotChangesCheckbox, "BOTTOMLEFT", 0, -16)
+	unibar1:SetPoint("TOPLEFT", actionBarText, "BOTTOMLEFT", 0, -16)
 
 	local unibar2 = newCheckbox('unibar2', L.Bars.Bar2, 
 		function(self) UniversalBar:SetBarID(2, self:GetChecked()) end
@@ -99,12 +103,46 @@ function UniversalBar:InitializeSettings()
 	)
 	unibar8:SetChecked(UniversalBarSettings.Bars[8])
 	unibar8:SetPoint("TOPLEFT", unibar7, "BOTTOMLEFT", 0, 0)
-
+	
+	local bonusBarText = frame:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+	bonusBarText:SetPoint("TOPLEFT", unibar4, "BOTTOMLEFT", 0, -16)
+	bonusBarText:SetText(L.Settings.BonusBarHeader)
+	
+	local bonus1 = newCheckbox('bonus1', L.Bars.Bonus1, 
+		function(self) UniversalBar:SetBarID('b1', self:GetChecked()) end
+	)
+	bonus1:SetChecked(UniversalBarSettings.Bars['b1'])
+	bonus1:SetPoint("TOPLEFT", bonusBarText, "BOTTOMLEFT", 0, 0)
+	
+	local bonus2 = newCheckbox('bonus2', L.Bars.Bonus2, 
+		function(self) UniversalBar:SetBarID('b2', self:GetChecked()) end
+	)
+	bonus2:SetChecked(UniversalBarSettings.Bars['b2'])
+	bonus2:SetPoint("TOPLEFT", bonus1, "BOTTOMLEFT", 0, 0)
+	
+	local bonus3 = newCheckbox('bonus3', L.Bars.Bonus3, 
+		function(self) UniversalBar:SetBarID('b3', self:GetChecked()) end
+	)
+	bonus3:SetChecked(UniversalBarSettings.Bars['b3'])
+	bonus3:SetPoint("TOPLEFT", bonus2, "BOTTOMLEFT", 0, 0)
+	
+	local bonus4 = newCheckbox('bonus4', L.Bars.Bonus4, 
+		function(self) UniversalBar:SetBarID('b4', self:GetChecked()) end
+	)
+	bonus4:SetChecked(UniversalBarSettings.Bars['b4'])
+	bonus4:SetPoint("TOPLEFT", bonus3, "BOTTOMLEFT", 0, 0)
+	
+	local bonus5 = newCheckbox('bonus5', L.Bars.Bonus5, 
+		function(self) UniversalBar:SetBarID('b5', self:GetChecked()) end
+	)
+	bonus5:SetChecked(UniversalBarSettings.Bars['b5'])
+	bonus5:SetPoint("TOPLEFT", bonus4, "BOTTOMLEFT", 0, 0)
+	
 	local saveBarConfigButton = CreateFrame("Button", "UniversalBarSaveBarConfigButton", frame, "UIPanelButtonTemplate")
 	saveBarConfigButton:SetText(L.Settings.Actions.SaveBars)
 	saveBarConfigButton:SetWidth(140)
 	saveBarConfigButton:SetHeight(24)
-	saveBarConfigButton:SetPoint("TOPLEFT", unibar4, "BOTTOMLEFT", 3, -16)
+	saveBarConfigButton:SetPoint("TOPLEFT", bonus5, "BOTTOMLEFT", 3, -16)
 	saveBarConfigButton:SetScript("OnClick", function()
 		UniversalBar:SaveBarConfig()
 	end)

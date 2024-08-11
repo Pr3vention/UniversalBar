@@ -30,7 +30,6 @@ local ActionBarSlotRanges = {
 local function PrintMessage(msg)
 	print(string.format('%s: %s', addonName, msg))
 end
-
 local function GetBarInfoForSlot(slotID)
 	for barID, range in pairs(ActionBarSlotRanges) do
 		local startIndex, endIndex = unpack(range)
@@ -75,8 +74,12 @@ local function UpdateSlotConfig(barID, slot, slotID)
 		UniversalBarSettings.BarConfig[barID][slot] = nil
 	end
 end
+
 function UniversalBar:SetBarID(barID, state)
-	assert(barID >= 1 and barID <= 8, L.Errors.UnsupportedBar)
+	if not ActionBarSlotRanges[barID] then
+		PrintMessage(L.Errors.UnsupportedBar)
+		return
+	end
 	UniversalBarSettings.Bars[barID] = state
 end
 function UniversalBar:SaveBarConfig()
@@ -127,7 +130,6 @@ function UniversalBar:LoadBarConfig()
 					local currentActionType, currentActionID = GetActionInfo(startIndex+slot-1)
 					if UniversalBarSettings.BarConfig[barID][slot] then
 						local actionType, actionID = UniversalBarSettings.BarConfig[barID][slot].type, UniversalBarSettings.BarConfig[barID][slot].id
-						
 						-- if the current slot's type and identifier are the same as what's already on the bar, we don't have to bother processing it
 						if currentActionType ~= actionType or currentActionID ~= actionID then
 							needPlaceAction = false
