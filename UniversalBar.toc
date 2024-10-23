@@ -1,4 +1,4 @@
-## Interface: 110002
+## Interface: 110005
 ## Title: Universal Bar
 ## Notes: Allows player to set a universal hotbar that is shared across their account
 ## Author: Pr3vention
