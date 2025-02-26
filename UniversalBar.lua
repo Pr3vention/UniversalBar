@@ -262,3 +262,13 @@ for event in pairs(loginEvents) do
 	eventFrame:RegisterEvent(event)
 	keys = keys + 1
 end
+
+-- command shortcuts
+SLASH_UniversalBar1 = "/ub"
+SlashCmdList["UniversalBar"] = function(cmd)
+	if cmd == 'load' or cmd == 'reload' then
+		UniversalBar:LoadBarConfig()
+	else
+		PrintMessage(string.format(L.Errors.UnknownCommand, cmd))
+	end
+end
