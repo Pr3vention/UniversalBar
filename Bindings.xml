@@ -1,0 +1,5 @@
+<Bindings>
+	<Binding name="UNIVERSALBAR_LOADBARCONFIG" category="Universal Bar">
+		SlashCmdList["UniversalBar"]('reload')
+	</Binding>
+</Bindings>

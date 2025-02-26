@@ -2,6 +2,8 @@ local addon = select(2, ...)
 local L = {}
 addon.L = L
 
+BINDING_NAME_UNIVERSALBAR_LOADBARCONFIG = 'Reload bar configuration'
+
 L.Bars = {
 	Bar1 = 'Action Bar 1',
 	Bar2 = 'Action Bar 2',
