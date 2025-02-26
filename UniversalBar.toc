@@ -10,6 +10,8 @@
 ## X-Wago-ID: 9rN44wND
 ## SavedVariables: UniversalBarSettings
 
+Libs/embeds.xml
+
 Localization/enUS.lua
 
 UniversalBar.lua

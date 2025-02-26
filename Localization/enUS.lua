@@ -22,6 +22,7 @@ L.Errors = {
 	UnknownEquipmentSet = 'Unknown equipment set name in saved configuration: %s',
 }
 L.Settings = {
+	ShowMinimapButton = 'Show minimap button',
 	AutoLoadAtLogin = 'Automatically load at login',
 	ClearUnsavedActionSlots = 'Clear slots that are not saved in universal configuration',
 	AutosaveSlotChanges = 'Automatically update shared bar configuration when a change is made',

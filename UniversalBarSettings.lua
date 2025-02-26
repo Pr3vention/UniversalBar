@@ -12,10 +12,40 @@ local defaultOptions = {
 	AutosaveSlotChanges = false,
 	Bars = {},
 	BarConfig = {},
+	minimap = {
+		hide = false
+	},
 }
 
+-- minimap icon
+local ubIcon = LibStub('LibDBIcon-1.0')
+local mmFrame = CreateFrame("Frame", "UBMiniMapMenu", UIParent, "UIDropDownMenuTemplate")
+local ubLDB = LibStub('LibDataBroker-1.1'):NewDataObject(addonName, {
+	type = 'data source',
+	text = 'Universal Bar',
+	icon = 'Interface\\Addons\\UniversalBar\\Assets\\logo_32x32',
+	OnClick = function(self, btn)
+		if btn == 'LeftButton' then
+			UniversalBar_OnAddonCompartmentClick()
+		elseif btn == 'RightButton' then
+			ToggleDropDownMenu(1, nil, mmFrame, self, 0, 0)
+		end
+	end
+})
+local function MinimapMenuInitialize(self)
+	info = {
+		text = 'Reload Bars',
+		func = function() UniversalBar:LoadBarConfig() end
+	}
+	UIDropDownMenu_AddButton(info)
+end
+UIDropDownMenu_Initialize(mmFrame, MinimapMenuInitialize, "MENU")
+
+-- addon settings
 function UniversalBar:InitializeSettings()
 	UniversalBarSettings = UniversalBarSettings or defaultOptions
+	if not UniversalBarSettings.minimap then UniversalBarSettings.minimap = { hide = false } end
+	ubIcon:Register(addonName, ubLDB, UniversalBarSettings.minimap)
 
 	local function newCheckbox(name, label, onclick)
 		local check = CreateFrame("CheckButton", "UniversalBarCheck" .. name, frame, "InterfaceOptionsCheckButtonTemplate")
@@ -30,12 +60,26 @@ function UniversalBar:InitializeSettings()
 	local title = frame:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 	title:SetPoint("TOPLEFT", 16, -16)
 	title:SetText(L.Settings.SettingsHeader)
+	
+	local showMinimapButtonCheckbox = newCheckbox('ShowMinimapButton', L.Settings.ShowMinimapButton, 
+		function(self) 
+			if not UniversalBarSettings.minimap then UniversalBarSettings.minimap = {} end
+			UniversalBarSettings.minimap.hide = not self:GetChecked()
+			if not UniversalBarSettings.minimap.hide then
+				ubIcon:Show(addonName)
+			else
+				ubIcon:Hide(addonName)
+			end
+		end
+	)
+	showMinimapButtonCheckbox:SetChecked(not UniversalBarSettings.minimap.hide)
+	showMinimapButtonCheckbox:SetPoint("TOPLEFT", title, "BOTTOMLEFT", -3, 0)
 
 	local autoLoadAtLoginCheckbox = newCheckbox('AutoLoadAtLogin', L.Settings.AutoLoadAtLogin, 
 		function(self) UniversalBarSettings.AutoLoadAtLogin = self:GetChecked() end
 	)
 	autoLoadAtLoginCheckbox:SetChecked(UniversalBarSettings.AutoLoadAtLogin)
-	autoLoadAtLoginCheckbox:SetPoint("TOPLEFT", title, "BOTTOMLEFT", -3, 0)
+	autoLoadAtLoginCheckbox:SetPoint("TOPLEFT", showMinimapButtonCheckbox, "BOTTOMLEFT", 0, 0)
 
 	local clearUnsavedActionSlots = newCheckbox('ClearUnsavedActionSlots', L.Settings.ClearUnsavedActionSlots, 
 		function(self) UniversalBarSettings.ClearUnsavedActionSlots = self:GetChecked() end
@@ -171,7 +215,7 @@ function UniversalBar:InitializeSettings()
 end
 
 local SettingsCategoryID
-function UniversalBar_OnAddonCompartmentClick(addonName, buttonName, menuButtonFrame)
+do
 	if not SettingsCategoryID then
 		for _,v in pairs(SettingsPanel:GetAllCategories()) do
 		   if v:GetName() == addonName then
@@ -180,6 +224,8 @@ function UniversalBar_OnAddonCompartmentClick(addonName, buttonName, menuButtonF
 		   end
 		end
 	end
+end
+function UniversalBar_OnAddonCompartmentClick(addonName, buttonName, menuButtonFrame)
 	if SettingsCategoryID then
 	   SettingsPanel:OpenToCategory(SettingsCategoryID)
 	else
