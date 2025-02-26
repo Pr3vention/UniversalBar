@@ -4,6 +4,7 @@ local L = UniversalBar.L
 -- local references
 local C_ToyBox, C_MountJournal, C_PetJournal, C_EquipmentSet, GetActionInfo, GetMacroInfo, C_Spell =
 	  C_ToyBox, C_MountJournal, C_PetJournal, C_EquipmentSet, GetActionInfo, GetMacroInfo, C_Spell
+local InCombatLockdown = InCombatLockdown
 	  
 local SUMMON_FAVORITE_MOUNT = 268435455
 
@@ -111,17 +112,11 @@ local function SetBarVisibility(bars)
 		bars[7] or bar7, 
 		bars[8] or bar8
 	)
-	if bar2 then MultiBarBottomLeft:SetShown(bars[2] or bar2) end
-	if bar3 then MultiBarBottomRight:SetShown(bars[3] or bar3) end
-	if bar4 then MultiBarRight:SetShown(bars[4] or bar4) end
-	if bar5 then MultiBarLeft:SetShown(bars[5] or bar5) end
-	if bar6 then MultiBar5:SetShown(bars[6] or bar6) end
-	if bar7 then MultiBar6:SetShown(bars[7] or bar6) end
-	if bar8 then MultiBar7:SetShown(bars[8] or bar6) end
+	MultiActionBar_Update()
 end
 function UniversalBar:LoadBarConfig()
-	SetBarVisibility(UniversalBarSettings.Bars or {})
 	local Barloader = coroutine.create(function()
+		SetBarVisibility(UniversalBarSettings.Bars or {})
 		for barID, state in pairs(UniversalBarSettings.Bars or {}) do
 			if state then
 				local needPlaceAction = true
@@ -205,7 +200,9 @@ function UniversalBar:LoadBarConfig()
 	BarsLoading = true
 	local ticker 
 	ticker = C_Timer.NewTicker(0, function()
-		coroutine.resume(Barloader)
+		if not InCombatLockdown() then
+			coroutine.resume(Barloader)
+		end
 		if not BarsLoading then
 			ticker:Cancel()
 		end
