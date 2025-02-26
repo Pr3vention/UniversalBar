@@ -94,6 +94,7 @@ function UniversalBar:InitializeSettings()
 		end
 	)
 	AutosaveSlotChangesCheckbox:SetChecked(UniversalBarSettings.AutosaveSlotChanges)
+	UniversalBar:SetActionSlotChangeEvent(UniversalBarSettings.AutosaveSlotChanges)
 	AutosaveSlotChangesCheckbox:SetPoint("TOPLEFT", clearUnsavedActionSlots, "BOTTOMLEFT", 0, 0)
 
 	local actionBarText = frame:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
