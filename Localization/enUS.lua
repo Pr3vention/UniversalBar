@@ -24,6 +24,13 @@ L.Errors = {
 	UnknownEquipmentSet = 'Unknown equipment set name in saved configuration: %s',
 	UnknownCommand = 'Unknown command: %s',
 }
+L.MinimapIcon = {
+	Lines = {
+		[1] = 'Universal Bar',
+		[2] = 'Left-click to open settings',
+		[3] = 'Right-click for quick actions'
+	}
+}
 L.Settings = {
 	ShowMinimapButton = 'Show minimap button',
 	AutoLoadAtLogin = 'Automatically load at login',

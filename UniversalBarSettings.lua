@@ -30,6 +30,11 @@ local ubLDB = LibStub('LibDataBroker-1.1'):NewDataObject(addonName, {
 		elseif btn == 'RightButton' then
 			ToggleDropDownMenu(1, nil, mmFrame, self, 0, 0)
 		end
+	end,
+	OnTooltipShow = function(tt) 
+		for line=1,#L.MinimapIcon.Lines do
+			tt:AddLine(L.MinimapIcon.Lines[line])
+		end
 	end
 })
 local function MinimapMenuInitialize(self)
