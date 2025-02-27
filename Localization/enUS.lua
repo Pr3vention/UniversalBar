@@ -25,6 +25,9 @@ L.Errors = {
 	UnknownCommand = 'Unknown command: %s',
 }
 L.MinimapIcon = {
+	Commands = {
+		ReloadBars = 'Reload Bars'
+	},
 	Lines = {
 		[1] = 'Universal Bar',
 		[2] = 'Left-click to open settings',

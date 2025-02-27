@@ -22,7 +22,7 @@ local ubIcon = LibStub('LibDBIcon-1.0')
 local mmFrame = CreateFrame("Frame", "UBMiniMapMenu", UIParent, "UIDropDownMenuTemplate")
 local ubLDB = LibStub('LibDataBroker-1.1'):NewDataObject(addonName, {
 	type = 'data source',
-	text = 'Universal Bar',
+	text = addonName,
 	icon = 'Interface\\Addons\\UniversalBar\\Assets\\logo_32x32',
 	OnClick = function(self, btn)
 		if btn == 'LeftButton' then
@@ -39,7 +39,7 @@ local ubLDB = LibStub('LibDataBroker-1.1'):NewDataObject(addonName, {
 })
 local function MinimapMenuInitialize(self)
 	info = {
-		text = 'Reload Bars',
+		text = L.MinimapIcon.Commands.ReloadBars,
 		func = function() UniversalBar:LoadBarConfig() end
 	}
 	UIDropDownMenu_AddButton(info)
