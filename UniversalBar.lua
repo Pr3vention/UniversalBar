@@ -59,7 +59,7 @@ local function UpdateSlotConfig(barID, slot, slotID)
 	elseif actionType == 'macro' then
 		-- if the macro's ID is queried and nothing is returned, it's more likely a bad query than a bad macro.
 		-- this should never happen, but better to ignore it in saved config than to have it throw an error later
-		local name = GetMacroInfo(id)
+		local name = C_ActionBar.GetActionText(slotID)
 		if name then
 			id = name
 		else
