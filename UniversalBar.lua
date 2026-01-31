@@ -7,6 +7,7 @@ local C_ToyBox, C_MountJournal, C_PetJournal, C_EquipmentSet, GetActionInfo, Get
 local InCombatLockdown = InCombatLockdown
 	  
 local SUMMON_FAVORITE_MOUNT = 268435455
+local SINGLE_BUTTON_ASSIST_SPELLID = 1229376
 
 -- blizzard's slotIDs are all over the place... no clue why.
 -- Blizzard shouldn't change these without reengineering the entire actionbar system, so we're safe to hardcode them
@@ -65,6 +66,9 @@ local function UpdateSlotConfig(barID, slot, slotID)
 			actionType = nil
 			id = nil
 		end
+	elseif actionType == 'spell' and subType == 'assistedcombat' then
+		actionType = 'singlebuttonassist'
+		id = 1229376
 	end
 	if actionType then
 		UniversalBarSettings.BarConfig[barID][slot] = {
@@ -122,13 +126,16 @@ function UniversalBar:LoadBarConfig()
 				local needPlaceAction = true
 				local startIndex, endIndex = unpack(ActionBarSlotRanges[barID])
 				for slot = 1, endIndex-startIndex+1 do
-					local currentActionType, currentActionID = GetActionInfo(startIndex+slot-1)
+					local currentActionType, currentActionID, currentSubType = GetActionInfo(startIndex+slot-1)
 					if UniversalBarSettings.BarConfig[barID][slot] then
 						local actionType, actionID = UniversalBarSettings.BarConfig[barID][slot].type, UniversalBarSettings.BarConfig[barID][slot].id
 						-- if the current slot's type and identifier are the same as what's already on the bar, we don't have to bother processing it
 						if currentActionType ~= actionType or currentActionID ~= actionID then
 							needPlaceAction = false
-							if actionType == 'spell' then
+							if actionType == 'singlebuttonassist' then
+								C_Spell.PickupSpell(SINGLE_BUTTON_ASSIST_SPELLID)
+								needPlaceAction = true
+							elseif actionType == 'spell' then
 								C_Spell.PickupSpell(actionID)
 								if not GetCursorInfo() then 
 									-- some abilities that override a base spell get placed on the action bar as the base spell even though it isn't available in the spellbook anymore
